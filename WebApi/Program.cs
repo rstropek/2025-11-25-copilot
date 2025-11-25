@@ -12,14 +12,24 @@ builder.AddSqliteConnection("my-database");
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
-// Add CORS for frontend
+// Add CORS for frontend (development only - configure appropriately for production)
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
     {
-        policy.AllowAnyOrigin()
-              .AllowAnyMethod()
-              .AllowAnyHeader();
+        if (builder.Environment.IsDevelopment())
+        {
+            // Allow any origin during development for easier testing
+            policy.AllowAnyOrigin()
+                  .AllowAnyMethod()
+                  .AllowAnyHeader();
+        }
+        else
+        {
+            // In production, configure specific origins as needed
+            policy.AllowAnyMethod()
+                  .AllowAnyHeader();
+        }
     });
 });
 
@@ -29,9 +39,9 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.UseCors();
 }
 
-app.UseCors();
 app.UseHttpsRedirection();
 
 app.MapGet("/ping", () => "pong");
