@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>API Endpoint Tester</title>
+  </head>
+  <body>
+    <div id="app">
+      <header>
+        <h1>🚀 API Endpoint Tester</h1>
+        <p class="subtitle">Test your dynamic database endpoints</p>
+      </header>
+
+      <main>
+        <section class="endpoints-container">
+          <h2>📋 Available Endpoints</h2>
+          <div id="endpoints-list"></div>
+        </section>
+
+        <section class="tester-container">
+          <h2>🧪 Test Endpoint</h2>
+          <div id="endpoint-form" class="form-container">
+            <p class="placeholder">Select an endpoint from the list to test it</p>
+          </div>
+        </section>
+
+        <section class="results-container">
+          <h2>📊 Results</h2>
+          <div id="results">
+            <p class="placeholder">Results will appear here after testing an endpoint</p>
+          </div>
+        </section>
+      </main>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
