@@ -11,6 +11,7 @@ This application implements a Web API that interacts with a SQLite database. Its
   * Service Defaults are in `ServiceDefaults`
 * Web API project is in `WebApi`
   * Database migrations are in `WebApi/Migrations`
+* Web API tests are in `WebApiTests`
 
 ## Coding Guidelines
 

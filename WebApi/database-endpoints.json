@@ -1,0 +1,30 @@
+{
+  "Endpoints": [
+    {
+      "Route": "/customers/filtered",
+      "Method": "GET",
+      "Query": "SELECT * FROM Customers WHERE (Country = $country OR $country IS NULL) AND (Email LIKE $emailPattern OR $emailPattern IS NULL) AND (Revenue >= $minRevenue OR $minRevenue IS NULL)",
+      "Parameters": {
+        "country": { "type": "string", "optional": true },
+        "emailPattern": { "type": "string", "optional": true },
+        "minRevenue": { "type": "decimal", "optional": true }
+      },
+      "ReturnType": "Array"
+    },
+    {
+      "Route": "/customers/all",
+      "Method": "GET",
+      "Query": "SELECT * FROM Customers",
+      "ReturnType": "Array"
+    },
+    {
+      "Route": "/customers/by-id",
+      "Method": "GET",
+      "Query": "SELECT * FROM Customers WHERE Id = $id",
+      "Parameters": {
+        "id": { "type": "int", "optional": false }
+      },
+      "ReturnType": "Single"
+    }
+  ]
+}

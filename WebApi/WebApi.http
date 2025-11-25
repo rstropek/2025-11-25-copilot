@@ -4,3 +4,63 @@ GET {{WebApi_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
+
+# Apply migrations
+POST {{WebApi_HostAddress}}/migrate
+Accept: application/json
+
+###
+
+# Get all customers
+GET {{WebApi_HostAddress}}/customers/all
+Accept: application/json
+
+###
+
+# Get customer by ID (existing customer)
+GET {{WebApi_HostAddress}}/customers/by-id?id=1
+Accept: application/json
+
+###
+
+# Get customer by ID (non-existent customer)
+GET {{WebApi_HostAddress}}/customers/by-id?id=999
+Accept: application/json
+
+###
+
+# Get customer by ID (missing required parameter)
+GET {{WebApi_HostAddress}}/customers/by-id
+Accept: application/json
+
+###
+
+# Filter customers by country
+GET {{WebApi_HostAddress}}/customers/filtered?country=USA
+Accept: application/json
+
+###
+
+# Filter customers by email pattern
+GET {{WebApi_HostAddress}}/customers/filtered?emailPattern=%tokyo%
+Accept: application/json
+
+###
+
+# Filter customers by minimum revenue
+GET {{WebApi_HostAddress}}/customers/filtered?minRevenue=100000
+Accept: application/json
+
+###
+
+# Filter customers with multiple parameters
+GET {{WebApi_HostAddress}}/customers/filtered?country=Germany&minRevenue=200000
+Accept: application/json
+
+###
+
+# Filter customers with all optional parameters missing
+GET {{WebApi_HostAddress}}/customers/filtered
+Accept: application/json
+
+###

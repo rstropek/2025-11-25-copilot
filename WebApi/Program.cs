@@ -27,6 +27,9 @@ app.MapGet("/ping", () => "pong");
 // Map migration endpoints
 app.MapMigrationEndpoints();
 
+// Map dynamic query endpoints
+app.MapDynamicQueryEndpoints();
+
 var summaries = new[]
 {
     "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"

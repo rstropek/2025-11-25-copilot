@@ -84,6 +84,5 @@ Implement an endpoint using C# 14 extension blocks (similar to `./WebApi/Migrati
   - Test with no results (expect empty array or not found)
   - Test with valid results (expect correct JSON response)
 - Build the project with `dotnet build`
-- Run the AppHost to see if it starts without errors
 - Run the integration tests with `dotnet test` to ensure all tests pass
 
