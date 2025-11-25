@@ -1,6 +1,9 @@
 using Microsoft.Data.Sqlite;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
+
+[assembly: InternalsVisibleTo("WebApiTests")]
 
 namespace WebApi;
 
@@ -46,40 +49,13 @@ public static class Queries
                     endpoints.MapGet(route, async (HttpContext context, SqliteConnection connection) =>
                     {
                         // Validate and collect parameters
-                        var parameters = new Dictionary<string, object?>();
-                        if (endpointDef.Parameters != null && endpointDef.Parameters.Count > 0)
+                        var result = MapParameters(endpointDef.Parameters, context.Request.Query);
+                        if (result.Error != null)
                         {
-                            foreach (var param in endpointDef.Parameters)
-                            {
-                                var queryValue = context.Request.Query[param.Key].FirstOrDefault();
-
-                                if (string.IsNullOrEmpty(queryValue))
-                                {
-                                    if (!param.Value.Optional)
-                                    {
-                                        return Results.BadRequest(new { error = $"Required parameter '{param.Key}' is missing" });
-                                    }
-                                    parameters[param.Key] = null;
-                                }
-                                else
-                                {
-                                    try
-                                    {
-                                        parameters[param.Key] = param.Value.Type.ToLowerInvariant() switch
-                                        {
-                                            "int" => int.Parse(queryValue, CultureInfo.InvariantCulture),
-                                            "decimal" => decimal.Parse(queryValue, CultureInfo.InvariantCulture),
-                                            "string" => queryValue,
-                                            _ => throw new InvalidOperationException($"Unsupported parameter type: {param.Value.Type}")
-                                        };
-                                    }
-                                    catch (FormatException)
-                                    {
-                                        return Results.BadRequest(new { error = $"Parameter '{param.Key}' has invalid format for type '{param.Value.Type}'" });
-                                    }
-                                }
-                            }
+                            return Results.BadRequest(new { error = result.Error });
                         }
+                        
+                        var parameters = result.Parameters!;
 
                         try
                         {
@@ -135,14 +111,65 @@ public static class Queries
         }
     }
 
-    private record DatabaseEndpointsConfig(List<EndpointDefinition> Endpoints);
+    internal static ParameterMappingResult MapParameters(
+        Dictionary<string, ParameterDefinition>? parameterDefinitions,
+        IQueryCollection queryCollection)
+    {
+        var parameters = new Dictionary<string, object?>();
+        
+        if (parameterDefinitions != null && parameterDefinitions.Count > 0)
+        {
+            foreach (var param in parameterDefinitions)
+            {
+                var queryValue = queryCollection[param.Key].FirstOrDefault();
 
-    private record EndpointDefinition(
+                if (string.IsNullOrEmpty(queryValue))
+                {
+                    if (!param.Value.Optional)
+                    {
+                        return new ParameterMappingResult(
+                            null, 
+                            $"Required parameter '{param.Key}' is missing");
+                    }
+                    parameters[param.Key] = null;
+                }
+                else
+                {
+                    try
+                    {
+                        parameters[param.Key] = param.Value.Type.ToLowerInvariant() switch
+                        {
+                            "int" => int.Parse(queryValue, CultureInfo.InvariantCulture),
+                            "decimal" => decimal.Parse(queryValue, CultureInfo.InvariantCulture),
+                            "string" => queryValue,
+                            _ => throw new InvalidOperationException($"Unsupported parameter type: {param.Value.Type}")
+                        };
+                    }
+                    catch (FormatException)
+                    {
+                        return new ParameterMappingResult(
+                            null,
+                            $"Parameter '{param.Key}' has invalid format for type '{param.Value.Type}'");
+                    }
+                }
+            }
+        }
+
+        return new ParameterMappingResult(parameters, null);
+    }
+
+    internal record ParameterMappingResult(
+        Dictionary<string, object?>? Parameters,
+        string? Error);
+
+    internal record DatabaseEndpointsConfig(List<EndpointDefinition> Endpoints);
+
+    internal record EndpointDefinition(
         string Route,
         string Method,
         string Query,
         Dictionary<string, ParameterDefinition>? Parameters,
         string ReturnType);
 
-    private record ParameterDefinition(string Type, bool Optional);
+    internal record ParameterDefinition(string Type, bool Optional);
 }
