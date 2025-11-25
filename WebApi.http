@@ -1,0 +1,7 @@
+@host = http://localhost:5206
+
+### Apply migrations
+POST {{host}}/migrate
+
+###
+GET {{host}}/ping
