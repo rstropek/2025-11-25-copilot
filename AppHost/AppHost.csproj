@@ -5,6 +5,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Aspire.Hosting.JavaScript" Version="13.0.0" />
     <PackageReference Include="CommunityToolkit.Aspire.Hosting.Sqlite" Version="13.0.0" />
   </ItemGroup>
 

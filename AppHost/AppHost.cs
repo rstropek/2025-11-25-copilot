@@ -8,4 +8,9 @@ var sqlite = builder.AddSqlite("my-database", dbPath, dbFile);
 var webApi = builder.AddProject<Projects.WebApi>("webapi")
     .WithReference(sqlite);
 
+var frontend = builder.AddViteApp("frontend", "../Frontend")
+    .WithReference(webApi)
+    .WaitFor(webApi)
+    .WithEnvironment("VITE_API_URL", webApi.GetEndpoint("http"));
+
 builder.Build().Run();
