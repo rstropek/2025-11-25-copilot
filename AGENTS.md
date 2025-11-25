@@ -4,6 +4,14 @@
 
 This application implements a Web API that interacts with a SQLite database. Its endpoints are driven by metadata defined in a separate JSON file. The metadata specifies parameterized queries for web API endpoints.
 
+## Folder Structure
+
+* This project uses Aspire
+  * Application host is in `AppHost`
+  * Service Defaults are in `ServiceDefaults`
+* Web API project is in `WebApi`
+  * Database migrations are in `WebApi/Migrations`
+
 ## Coding Guidelines
 
 * Whenever you change something to the project structure, use the dotnet CLI instead of manually editing the .csproj file.
